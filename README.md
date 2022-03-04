@@ -1,7 +1,7 @@
 # Easy8266
 ESP8266 custom firmware for easier GET and POST requests.
 
-Should work with any ESP board with 512KB+ flash memory.
+Should work with any ESP board with 512KB+ of flash memory.
 
 ## The serial protocol
 Default serial port params:
@@ -43,6 +43,20 @@ If the response is received successfully you will receive:
 
 If you don't need stream start, data length and stream end markers please disable them in a "Params" section of the source file.
 
+POST example in C:
+```cpp
+// API path
+const char *url = "http://myserver/api/";
+
+// Create request
+char data[200];
+sprintf_s(data, sizeof(data) - 1, "temperature=%d", temperature);
+
+// Send
+fprintf(com1, "\001%s\002%s\003", url, data);
+
+```
+
 ### GET request
 - Load URL like shown in a "Load URL command" section
 - Send byte 0x04
@@ -62,16 +76,45 @@ If the response is received successfully you will receive:
 
 If you don't need stream start, data length and stream end markers please disable them in a "Params" section of the source file.
 
+GET example in C:
+```cpp
+// API path
+const char *url = "http://myserver/api/";
+
+// Create request
+char data[200];
+sprintf_s(data, sizeof(data) - 1, "temperature=%d", temperature);
+
+// Send
+fprintf(com1, "\001%s?%s\004", url, data);
+
+```
+
 ### Configure command
 - Send byte 0x02
-- Send a ACCESS POINT 1 name (max 64 chars)
+- Send an ACCESS POINT 1 name (max 64 chars)
 - Send byte 0x09 (tab)
-- Send a ACCESS POINT 1 password (max 64 chars)
+- Send an ACCESS POINT 1 password (max 64 chars)
 - Send byte 0x0D (carriage-return)
 - Repeat steps 2-5 for all the access points
 - Send byte 0x06
 
 The configuration will be stored in a flash memory. After reset it will be reloaded so you don't need to send access point params on each reset.
+
+Configuration example in C:
+```cpp
+// Main AP name and password
+const char *name1 = "Keenetic-4367";
+const char *pass1 = "#@%V$$%346o96";
+
+// Battery-backed AP name and password
+const char *name2 = "iPhone";
+const char *pass2 = "uv46368$69q498689";
+
+// Send
+fprintf(com1, "\002%s\t%s\r%s\t%s\006", name1, pass1, name2, pass2);
+
+```
 
 ### Check the connection status
 - Send byte 0x07
