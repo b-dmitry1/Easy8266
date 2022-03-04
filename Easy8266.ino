@@ -1,3 +1,15 @@
+/*
+
+Easy8266
+
+Based on a PostHttpClient example.
+
+https://github.com/b-dmitry1/Easy8266
+
+The project is provided "as is" without any warranty. Please use at your own risk.
+
+*/
+
 #include <FS.h>
 #include <LittleFS.h>
 
@@ -17,19 +29,25 @@
 // Number of access points
 #define AP_COUNT          2
 
+
 // Buffer sizes
 #define URL_SIZE          2000
 #define DATA_SIZE         18000
 #define CHUNK_SIZE        128
 
-// Config file name on a flash disk
-const char *config_file_name = "/config.txt";
 
+// Stream markers
 #define STREAM_START      "!<<<"
 #define STREAM_END        "!>>>"
 
+#define STREAM_ERROR      "!ERR"
+
 const int stream_send_size = 1;
 const int stream_send_crc = 1;
+
+
+// Config file name on a flash disk
+const char *config_file_name = "/config.txt";
 
 ///////////////////////////////////////////////////////////////////////
 // Const data
@@ -533,6 +551,12 @@ void loop()
             Serial.write(crc & 0xFF);
           }
         }
+      }
+      else
+      {
+        Serial.print(STREAM_ERROR);
+        Serial.print(httpCode);
+        Serial.print("\n");
       }
       
       http.end();
