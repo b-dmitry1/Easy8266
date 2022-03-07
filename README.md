@@ -135,3 +135,13 @@ After building a program select Sketch -> Export compiled Binary to create a bin
 Please note that ESP8266's VCC and input voltage must not exceed 3.3V.
 
 Now you can easily download files and send POST requests via almost any microcontroller.
+
+## Reliability of ESP8266
+
+We started using ESP8266 in production since 2016. Every year we installing hundreds of devices and they working 24/7 very good.
+
+As you can see on the picture it is ESP-07 with ceramic antennae.
+
+For maximum reliability we use a dedicated power regulator, and have HARD RESET pin connected to a main microcontroller's GPIO.
+
+![Board](Pictures/esp.jpg)
